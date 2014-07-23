@@ -1,14 +1,22 @@
-/* global describe, it */
+/* global describe, it, before */
 'use strict';
 
 
 var expect = require('chai').expect;
-var Item  = require('../../app/models/item');
+var connect = require('../../app/lib/mongodb');
+var Item;
 
 describe('Item', function(){
+  before(function(done) {
+    connect('home-inventory-test', function(){
+    Item  = require('../../app/models/item');
+    done();
+    });
+  });
+
   describe('constructor', function(){
     it('should create an object called item with properties', function(){
-    var inv = new Item('table', 'kitchen', '1/15/2014', 2, 100);
+      var inv = new Item('table', 'kitchen', '1/15/2014', 2, 100);
 
     expect(inv).to.be.instanceof(Item);
     expect(inv.room).to.equal('kitchen');
@@ -22,7 +30,15 @@ describe('Item', function(){
   });
 
 
-
+  describe('#save', function(){
+    it('should save an item to the mongo database', function(done){
+      var table = new Item('table', 'kitchen', '1/15/2014', 2, 100);
+      table.save(function(){
+        expect(table._id).to.be.ok;
+        done();
+      }); 
+    });
+  });
 
 
 
