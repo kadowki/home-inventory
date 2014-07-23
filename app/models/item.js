@@ -19,6 +19,17 @@ Item.prototype.save = function(cb){
   });
 };
 
+Item.find = function(item, cb){
+  if(cb !== undefined){
+  cItem.find({name: item}).toArray(function(err, items){
+    cb(items);
+    });
+  }else{
+    cItem.find().toArray(function(err, items){
+    item(items);
+    });
+  }
+};
 
 
 
@@ -31,3 +42,4 @@ Item.prototype.save = function(cb){
 
 
 module.exports = Item;
+
