@@ -1,6 +1,7 @@
 'use strict';
 
 var cItem = global.mongodb.collection('items');
+var _ = require('lodash');
 
 function Item(name, room, date, count, costEach){
   this.name      = name;
@@ -21,7 +22,7 @@ Item.prototype.save = function(cb){
 
 Item.find = function(item, cb){
   if(cb !== undefined){
-  cItem.find({name: item}).toArray(function(err, items){
+    cItem.find({name: item}).toArray(function(err, items){
     cb(items);
     });
   }else{
@@ -31,7 +32,21 @@ Item.find = function(item, cb){
   }
 };
 
+Item.value = function(area, cb){
+    cItem.find({room: area}).toArray(function(err, items){
+    var sum = 0;
+    for(var i = 0; i < items.length; i++){
+      var item = items[i]; //Each items is set to the value of item[i]
+      item = _.create(Item.prototype, item); //resets the prototype chain
+      sum += item.value();
+    }
+      cb(sum);
+    });
+};
 
+Item.prototype.value = function(){
+  return this.count * this.costEach;
+};
 
 
 
