@@ -45,8 +45,7 @@ describe('Item', function(){
         done();
       }); 
     });
-  })
-  ;
+  });
   describe('.find', function(){
     it('should find all the items from the mongo database', function(done){
       var table = new Item('table', 'kitchen', '1/15/2014', 2, 100);
